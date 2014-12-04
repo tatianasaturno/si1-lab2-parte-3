@@ -4,10 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-POST    /series                      controllers.Application.mostraSeries()
-GET     /metas                      controllers.Application.metas()
-POST    /delete=:idSemana		    controllers.Application.deleteMeta(idSemana: Long, idMeta: Long)
-POST    /alcancada=:id              controllers.Application.setAlcancada(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+POST    /acompanharSerie            controllers.Application.acompanharSerie()
+POST    /assistirAEpisodio          controllers.Application.assistirAEpisodio()

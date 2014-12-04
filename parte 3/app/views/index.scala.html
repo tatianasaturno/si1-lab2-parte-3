@@ -1,86 +1,91 @@
-@(semanas: List[Semana])
-
-<html lang="pt-BR">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		
-		<title>Minhas Metas</title>
-		<!-- Bootstrap CSS -->
-		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
-	</head>
-	<body>
-		<div id="container">
-			<h1> Minhas Metas</h1>
-			<h4>Adicionar Meta</h4>
-			<form action="@routes.Application.addMeta()" method="post">
-				<label for="nome">Nome</label>
-				<input id="nome" name="nome" type="text" placeholder="Nome" required>
-				<label for="descricao">Descrição</label>
-				<input id="descricao" name="descricao" type="text" placeholder="Descrição da Meta">
-				
-				<label for="semana">Semana</label>
-				<select id="semana" name="semana">
-					@for(semana <- semanas){
-						<option value="@semana.getId()">@semana.intervalAsString()</option>
-					}
-				</select>
-				
-				<label for="prioridade">Escolha uma prioridade</label>
-				<select id="prioridade" name="prioridade">
-					<option value="baixa">Baixa</option>
-					<option value="normal">Normal</option>
-					<option value="alta">Alta</option>
-				</select>
-				<button class="btn btn-primary">Adicionar</button>
-				<br></br>
-			</form>
-
-			<h3>Metas Atuais</h3>
-			@for(semana <- semanas){
-				@if(!semana.isEmpty()){
-				<h4 class="text-warning">Semana @semana.intervalAsString()
-				Total de Metas: @semana.totalMetas() Alcançadas: @semana.totalMetasAlcancadas() Não Alcançadas: @semana.totalMetasNaoAlcancadas()</h4>
-				<div class="table-responsive">
-				<table class="table table-bordered">
-					<thead>
-						<th>Meta</th><th>Descrição</th><th>Prioridade</th><th></th><th></th>
-					</thead>
-					<tbody>
-						@for(meta <- semana.getMetas()){
-							
-							@if(meta.getAlcancada() == true){
-								<tr class="info">
-							} else {
-								<tr>
-							}
-							
-								<td>@meta.getNome()</td>
-								<td>@meta.getDescricao()</td>
-								<td>@meta.getPrioridade()</td>
-								<td>
-									<form action="@routes.Application.setAlcancada(meta.getId())" method="post">
-										<button class="btn btn-success">Alcançada</button>
-									</form>
-								</td>
-								<td>
-									<form action="@routes.Application.deleteMeta(semana.getId(), meta.getId())" method="post">
-										<button class="btn btn-danger">Remover</span></button>
-									</form>
-								</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-				</div>
-				}
-			}
-		</div>
-
-		<!-- jQuery -->
-		<script src="http://code.jquery.com/jquery.js"></script>
-		<!-- Bootstrap JavaScript -->
-		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-	</body>
+@(series: List[Serie])
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name=description content="">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>World Series</title>
+        <!-- Bootstrap CSS -->
+		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet" media="screen">        
+ 		<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" rel="javascript" media="screen"></script>
+ 		<script src="@routes.Assets.at("javascripts/jquery-extra.js")" rel="javascript" media="screen"></script>
+    </head>
+    <body>
+    	<div class="content"><br>
+    		<div class="jumbotron">
+    			<h1 style="text-align: center">Sistema de acompanhamento de seriados.</h1>
+    		</div>
+    		<div class="row" style="text-align: center;">
+    			<div class="col-sm-3" style="left: 10%;">
+    				<div class="panel panel-default">
+		    			<h1 class="panel-title" style="font-size: xx-large;">Séries</h1>
+		    			@for(serie <- series){
+		    				@if(!serie.assistindo()){
+		    				<form method="post" action="@routes.Application.acompanharSerie()">    							
+			    					<input type="hidden" name="id" value="@serie.getId()">
+					            	<button type="submit" class="close" id="acompanharSerie"><span aria-hidden="true">&#10003;</span>
+					            	<span class="sr-only">Acompanhar serie</span></button>
+					        	</form>
+		    				<div id="showHide" class="panel-heading span5 episodio">
+			    					<p class="unselectable">@serie.getNome()</p>			    					
+			    			</div>
+			    				<ul class="lista list-group episodio">			    				
+			    					@for(temporada <- serie.getTemporadas()){
+			    						<li style="background-color: gray;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    					}
+			    				</ul>
+		    				}
+		    			}
+    				</div>
+    			</div>
+    			<div class="col-sm-3" style="left: 40%">
+    				<div class="panel panel-default">
+		    			<h1 class="panel-title" style="font-size: xx-large;">Acompanhando</h1>
+		    			@for(serie <- series){
+		    				@if(serie.assistindo()){
+			    				<div id="showHide" class="panel-heading span5">
+			    					<span class="unselectable">@serie.getNome()</span>
+			    				</div>
+			    				<ul class="lista list-group">
+			    					@for(temporada <- serie.getTemporadas()){
+			    					<div class="span5 episodio">
+			    						@if(temporada.assisti().equals(true)){
+			    							<li style="background-color: gray;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    						}else{
+			    							@if(temporada.assisti().equals(false)){
+			    							<li style="background-color: yellow;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    							}else{
+			    								<li style="background-color: #33CC33;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    							}
+			    						}
+			    						</div>
+				    						<ul class="lista list-group episodio">
+				    							@for(episodio <- temporada.getEpisodios()){
+				    								@if(episodio.assisti()){				    									
+				    									<li style="background-color: #33CC33;" class="list-group-item">@episodio.getNome</li>
+				    								}else{<li style="background-color: gray;" class="list-group-item">
+				    									<form method="post" action="@routes.Application.assistirAEpisodio()">    							
+			    											<input type="hidden" name="id" value="@episodio.getId()">
+					            							<button type="submit" class="close" id="assistirAEpisodio"><span aria-hidden="true">&#10003;</span>
+					            							<span class="sr-only">Assistir a episodio</span></button>
+					        							</form>
+				    									@episodio.getNome</li>
+				    								}
+				    							}
+				    						</ul>
+			    					}
+			    				</ul>
+		    				}
+		    			}
+    				</div>
+    			</div>
+    		</div>
+    		<div class="col-sm-5">
+    			
+    		</div>
+    	</div>    
+   	</body>
 </html>
-
-

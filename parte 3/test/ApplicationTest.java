@@ -1,6 +1,5 @@
 import models.bd.BD;
 import models.Episodio;
-import models.Meta;
 import models.Serie;
 import models.Temporada;
 
