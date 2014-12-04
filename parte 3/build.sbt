@@ -1,4 +1,4 @@
-name := """si1-lab2-2"""
+name := """series"""
 
 version := "1.0-SNAPSHOT"
 

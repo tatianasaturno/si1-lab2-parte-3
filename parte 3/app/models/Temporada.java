@@ -21,17 +21,17 @@ public class Temporada implements Comparable<Temporada>{
     @Id
     @GeneratedValue
     private Long id;
-
+    @Column
     private int numTemporada;
     private int numEpisodios;
     private int proximoEpisodio;
-    private int episodiosAssistidos;
-    private int numDefinidoDeEpisodios; //caso seja definido em global
     
     @OneToMany(cascade={CascadeType.ALL})
 	@JoinColumn(name="EPISODIOS")
     private List<Episodio> episodios;
-    
+    @ManyToOne(cascade=CascadeType.ALL)
+	Serie serie;
+    @Column
     private boolean assisti;
     private boolean assistindo;
 
@@ -40,13 +40,12 @@ public class Temporada implements Comparable<Temporada>{
     	assistindo = true;
     	episodios = new ArrayList<Episodio>();
     	numEpisodios = 0;
-    	numDefinidoDeEpisodios = 1000;
     }
     
-    public Temporada(int numTemporada){
-        this();
-        this.numTemporada = numTemporada;
-        numTemporada = 0;
+    public Temporada(int numTemporada, Serie serie){
+    	this();
+		this.numTemporada = numTemporada;
+		this.serie = serie;
     }
     
     public void addEpisodio(Episodio e){
@@ -68,21 +67,25 @@ public class Temporada implements Comparable<Temporada>{
     	return numTemporada;
     }
 
-    public int getNumDefinidoDeEpisodios() {
-		return numDefinidoDeEpisodios;
+	public Serie getSerie() {
+		return serie;
+	}
+
+	public void setSerie(Serie serie) {
+		this.serie = serie;
 	}
 
 	public int getNumEpisodios() {
 		return numEpisodios;
 	}
 
-	public int getProximoEpisodio() {
-		int saida = 0;
-		if(getEpisodiosAssistidos() < getNumDefinidoDeEpisodios()){
-			proximoEpisodio = getEpisodiosAssistidos()+1;
-			saida = proximoEpisodio;
-		}
-		return saida;
+	private void achaProximoEpisodio(int contador) {
+			proximoEpisodio = contador+1;
+	}
+	
+	public int getProximoEpisodio(){
+		checarAssistida();
+		return proximoEpisodio;
 	}
 
 	public List<Episodio> getEpisodios() {
@@ -102,11 +105,6 @@ public class Temporada implements Comparable<Temporada>{
 		assistindo = false;
 	}
 	
-	public void assistiEpisodio(int i){
-		episodiosAssistidos++;
-		episodios.get(i-1).assisti();
-	}
-	
 	public boolean assistindo(){
 		return assistindo;
 	}
@@ -115,8 +113,15 @@ public class Temporada implements Comparable<Temporada>{
 		return episodios.isEmpty();
 	}
 	
-	public int getEpisodiosAssistidos(){
-		return episodiosAssistidos;
+	public void checarAssistida() {
+		int contador = 0;
+		for (Episodio episodio : episodios) {
+			if (episodio.assisti()){
+				contador+=1;
+			}				
+		}
+		if (contador==episodios.size()) temporadaAssistida();
+		else achaProximoEpisodio(contador);
 	}
 
 	@Override
@@ -141,6 +146,38 @@ public class Temporada implements Comparable<Temporada>{
     public int hashCode(){
         return Objects.hashCode(this.numTemporada);
     }
+
+	public boolean isAssisti() {
+		return assisti;
+	}
+
+	public void setAssisti(boolean assisti) {
+		this.assisti = assisti;
+	}
+
+	public boolean isAssistindo() {
+		return assistindo;
+	}
+
+	public void setAssistindo(boolean assistindo) {
+		this.assistindo = assistindo;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setNumTemporada(int numTemporada) {
+		this.numTemporada = numTemporada;
+	}
+
+	public void setProximoEpisodio(int proximoEpisodio) {
+		this.proximoEpisodio = proximoEpisodio;
+	}
+
+	public void setEpisodios(List<Episodio> episodios) {
+		this.episodios = episodios;
+	}
 
 
 }

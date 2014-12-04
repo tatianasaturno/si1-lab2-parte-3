@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Global extends GlobalSettings {
 
-	private static BD dao = new BD();
+	private static BD BD = new BD();
 
 	@Override
 	public void onStart(Application app) {
@@ -25,7 +25,7 @@ public class Global extends GlobalSettings {
 			@Override
 			public void invoke() throws Throwable {
 				povoaBD();
-				dao.flush();
+				BD.flush();
 			}
 		});
 	}
@@ -45,50 +45,50 @@ public class Global extends GlobalSettings {
 				.getAbsolutePath();
 		BufferedReader br = null;
 		String linha = "";
-		String cvsSplitBy = ",";
+		String divCSV = ",";
 
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
-			String[] info = linha.split(cvsSplitBy);
-			int numTemporada = 1;
-			String nomeSerie = "South Park";
+			String[] info = linha.split(divCSV);
 
 			Serie serie = new Serie("South Park");
-			Temporada temporada = new Temporada(1);
-			Episodio episodio = new Episodio(1, "Cartman Gets an Anal Probe");
+			Temporada temporada = new Temporada(1, serie);
+			Episodio episodio = new Episodio(1, "Cartman Gets an Anal Probe", temporada);
 
 			temporada.addEpisodio(episodio);
 			serie.addTemporada(temporada);
 			linha = br.readLine();
 
 			while ((linha = br.readLine()) != null) {
-				info = linha.split(cvsSplitBy);
-				if (nomeSerie.equals(info[0])) {
-					if (serie.getNumTemporadas() != 0
-							&& serie.getUltimaTemporada().getNumTemporada() == Integer
-									.parseInt(info[1])) {
-						
-						episodio = new Episodio(Integer.parseInt(info[2]),
-								info[3]);
-
+				info = linha.split(divCSV);
+				
+				if (serie.getNome().equals(info[0])){
+					if (serie.getNumTemporadas() !=0 && serie.getUltimaTemporada().getNumTemporada() ==Integer.parseInt(info[1])) {
+						if (info.length>=4)
+							episodio = new Episodio(Integer.parseInt(info[2]), info[3], serie.getUltimaTemporada());
+						else
+							episodio = new Episodio(Integer.parseInt(info[2]), "", serie.getUltimaTemporada());
 						serie.getUltimaTemporada().addEpisodio(episodio);
-					} else {
-						temporada = new Temporada(Integer.parseInt(info[1]));
-						episodio = new Episodio(Integer.parseInt(info[2]),
-								info[3]);
+					} else{
+						temporada = new Temporada(Integer.parseInt(info[1]),serie);
+						if (info.length>=4)
+							episodio = new Episodio(Integer.parseInt(info[2]), info[3], serie.getUltimaTemporada());
+						else
+							episodio = new Episodio(Integer.parseInt(info[2]), "", serie.getUltimaTemporada());
 						temporada.addEpisodio(episodio);
 						serie.addTemporada(temporada);
 					}
-
-				} else {
-					dao.persist(serie);
+				} else{
+					BD.persist(serie);
 					serie = new Serie(info[0]);
-					temporada = new Temporada(Integer.parseInt(info[1]));
-					episodio = new Episodio(Integer.parseInt(info[2]), info[3]);
+					temporada = new Temporada(Integer.parseInt(info[1]),serie);
+					if (info.length>=4)
+						episodio = new Episodio(Integer.parseInt(info[2]), info[3], serie.getUltimaTemporada());
+					else
+						episodio = new Episodio(Integer.parseInt(info[2]), "", serie.getUltimaTemporada());
 					temporada.addEpisodio(episodio);
 					serie.addTemporada(temporada);
 				}
-
 			}
 		}
 

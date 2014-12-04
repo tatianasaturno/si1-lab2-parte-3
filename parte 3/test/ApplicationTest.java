@@ -69,28 +69,28 @@ public class ApplicationTest {
     @Test
     public void deveAdicionarTemporadas(){
     	Serie serie = new Serie("Revenge");
-    	serie.addTemporada(new Temporada(1));
+    	serie.addTemporada(new Temporada(1, serie));
     	assertThat(serie.getTotalTemporadas()).isEqualTo(1);
     }
     
     @Test
     public void deveIniciarTemporadaVazia(){
-    	Temporada temporada = new Temporada(1);
+    	Temporada temporada = new Temporada(1, null);
     	assertThat(temporada.getNumEpisodios()).isEqualTo(0);
     }
     
     @Test
     public void deveAdicionarEpisodioATemporada(){
-    	Temporada temporada = new Temporada(1);
-    	temporada.addEpisodio(new Episodio(1, "pilot"));
+    	Temporada temporada = new Temporada(1, null);
+    	temporada.addEpisodio(new Episodio(1, "pilot", temporada));
     	assertThat(temporada.getNumEpisodios()).isEqualTo(1);
     }
     
     @Test
     public void deveSetarComoNaoAssistido(){
     	Serie serie = new Serie("Revenge");
-    	Temporada temporada = new Temporada(1);
-    	Episodio episodio = new Episodio(1, "pilot");
+    	Temporada temporada = new Temporada(1, serie);
+    	Episodio episodio = new Episodio(1, "pilot", temporada);
     	
     	assertThat(serie.assisti()).isEqualTo(false);
     	assertThat(temporada.assisti()).isEqualTo(false);
@@ -100,8 +100,8 @@ public class ApplicationTest {
     @Test
     public void deveSetarParaAssistido(){
     	Serie serie = new Serie("Revenge");
-    	Temporada temporada = new Temporada(1);
-    	Episodio episodio = new Episodio(1, "pilot");
+    	Temporada temporada = new Temporada(1, serie);
+    	Episodio episodio = new Episodio(1, "pilot", temporada);
     	
     	serie.serieAssistida();
     	temporada.temporadaAssistida();
@@ -115,7 +115,7 @@ public class ApplicationTest {
     @Test
     public void deveSetarParaAssistindo(){
     	Serie serie = new Serie("Revenge");
-    	Temporada temporada = new Temporada(1);
+    	Temporada temporada = new Temporada(1, serie);
     	
     	assertThat(serie.assistindo()).isEqualTo(true);
     	assertThat(temporada.assistindo()).isEqualTo(true);
@@ -123,10 +123,12 @@ public class ApplicationTest {
     
     @Test
     public void deveInformarProximoEpisodio(){
-    	Temporada temporada = new Temporada(1);
-    	Episodio episodio = new Episodio(1, "pilot");
+    	Temporada temporada = new Temporada(1, null);
+    	Episodio episodio = new Episodio(1, "pilot", temporada);
+    	Episodio episodio2 = new Episodio(1, "pilot2", temporada);
     	temporada.addEpisodio(episodio);
-    	temporada.assistiEpisodio(1);
+    	temporada.addEpisodio(episodio2);
+    	temporada.getEpisodios().get(0).setAssisti(true);
     	
     	assertThat(temporada.getProximoEpisodio()).isEqualTo(2);
     }

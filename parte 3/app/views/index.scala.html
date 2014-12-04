@@ -2,12 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Acompanhamento de seriados</title>
         <meta charset="UTF-8">
         <meta name=description content="">
         <meta name=viewport content="width=device-width, initial-scale=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <title>World Series</title>
         <!-- Bootstrap CSS -->
 		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet" media="screen">        
  		<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" rel="javascript" media="screen"></script>
@@ -15,12 +14,10 @@
     </head>
     <body>
     	<div class="content"><br>
-    		<div class="jumbotron">
-    			<h1 style="text-align: center">Sistema de acompanhamento de seriados.</h1>
-    		</div>
+    			<h1>World Series: faça um acompanhamento de suas séries!</h1>
     		<div class="row" style="text-align: center;">
     			<div class="col-sm-3" style="left: 10%;">
-    				<div class="panel panel-default">
+    				<div class="panel panel-info">
 		    			<h1 class="panel-title" style="font-size: xx-large;">Séries</h1>
 		    			@for(serie <- series){
 		    				@if(!serie.assistindo()){
@@ -41,7 +38,7 @@
 		    			}
     				</div>
     			</div>
-    			<div class="col-sm-3" style="left: 40%">
+    			<div class="col-sm-3" style="left: 20%">
     				<div class="panel panel-default">
 		    			<h1 class="panel-title" style="font-size: xx-large;">Acompanhando</h1>
 		    			@for(serie <- series){
@@ -52,10 +49,10 @@
 			    				<ul class="lista list-group">
 			    					@for(temporada <- serie.getTemporadas()){
 			    					<div class="span5 episodio">
-			    						@if(temporada.assisti().equals(true)){
+			    						@if(temporada.assisti().equals(false)){
 			    							<li style="background-color: gray;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
 			    						}else{
-			    							@if(temporada.assisti().equals(false)){
+			    							@if(temporada.assisti().equals(true)){
 			    							<li style="background-color: yellow;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
 			    							}else{
 			    								<li style="background-color: #33CC33;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
@@ -70,7 +67,7 @@
 				    									<form method="post" action="@routes.Application.assistirAEpisodio()">    							
 			    											<input type="hidden" name="id" value="@episodio.getId()">
 					            							<button type="submit" class="close" id="assistirAEpisodio"><span aria-hidden="true">&#10003;</span>
-					            							<span class="sr-only">Assistir a episodio</span></button>
+					            							<span class="sr-only">Assistir episodio</span></button>
 					        							</form>
 				    									@episodio.getNome</li>
 				    								}

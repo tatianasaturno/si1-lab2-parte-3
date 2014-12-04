@@ -21,17 +21,15 @@ public class Serie implements Comparable<Serie>{
     @Id
     @GeneratedValue
     private Long id;
-
+    @Column
     private String nome;
     private int numTemporadas;
-    private int numDefinidoDeTemporadas; //caso seja definido em global
     private int temporadasAssistidas;
-    private int proximaTemporada;
     
     @OneToMany(cascade={CascadeType.ALL})
 	@JoinColumn(name="TEMPORADAS")
     private List<Temporada> temporadas;
-    
+    @Column
     private boolean assisti;
     private boolean assistindo;
 
@@ -46,7 +44,6 @@ public class Serie implements Comparable<Serie>{
         this();
         this.nome = nome;
         numTemporadas = 0;
-        numDefinidoDeTemporadas = 1000;
     }
     
     public void addTemporada(Temporada t){
@@ -79,10 +76,6 @@ public class Serie implements Comparable<Serie>{
 		return temporadasAssistidas;
 	}
 
-	public int getNumDefinidoDeTemporadas() {
-		return numDefinidoDeTemporadas;
-	}
-
 	/**
 	 * @return lista com as temporadas
 	 */
@@ -92,15 +85,6 @@ public class Serie implements Comparable<Serie>{
 	
 	public int getTotalTemporadas(){
 		return getTemporadas().size();
-	}
-	
-	public int getProximaTemporada() {
-		int saida = 0;
-		if(getTemporadasAssistidas() < getNumDefinidoDeTemporadas()){
-			proximaTemporada = getTemporadasAssistidas()+1;
-			saida = proximaTemporada;
-		}
-		return saida;
 	}
 
 	/**
@@ -150,8 +134,46 @@ public class Serie implements Comparable<Serie>{
         return Objects.hashCode(this.nome);
     }
 
-	public Temporada getUltimaTemporada() {
-		return getTemporadas().get(getNumTemporadas() - 1);
+    public Temporada getUltimaTemporada() throws Exception{
+		if (getNumTemporadas()==0)
+			throw new Exception("Lista de Temporadas vazia! Nome da serie: "+this.getNome());
+		return temporadas.get(temporadas.size()-1);
+	}
+
+	public boolean isAssisti() {
+		return assisti;
+	}
+
+	public void setAssisti(boolean assisti) {
+		this.assisti = assisti;
+	}
+
+	public boolean isAssistindo() {
+		return assistindo;
+	}
+
+	public void setAssistindo(boolean assistindo) {
+		this.assistindo = assistindo;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setNumTemporadas(int numTemporadas) {
+		this.numTemporadas = numTemporadas;
+	}
+	
+	public void setTemporadasAssistidas(int temporadasAssistidas) {
+		this.temporadasAssistidas = temporadasAssistidas;
+	}
+
+	public void setTemporadas(List<Temporada> temporadas) {
+		this.temporadas = temporadas;
 	}
 
 
