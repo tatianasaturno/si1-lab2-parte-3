@@ -1,0 +1,53 @@
+@(metas: List[Meta])
+
+<html>
+	<head>
+		<title>Minhas Metas</title>
+		<!-- Bootstrap CSS -->
+		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	</head>
+	<body>
+		<h1>Minhas Metas</h1>
+		<h4>Adicionar Meta</h4>
+		<form>
+			<label for="nome">Nomeie a tarefa</label>
+			<input id="nome" name="nome "type="text" placeholder="Nome">
+			<label for="descricao">Descreva a tarefa</label>
+			<input id="descricao" name="descricao" type="text" placeholder="Descrição da Meta">
+			<label for="prioridade">Escolha uma prioridade</label>
+			<select id="prioridade" name="prioridade">
+				<option value="baixa">Baixa</option>
+				<option value="normal">Normal</option>
+				<option value="alta">Alta</option>
+			</select>
+			<button>Adicionar</button>
+		</form>
+
+		<h4>Metas Atuais</h4>
+		@if(metas.isEmpty()){
+			<p>Você ainda não adicionou metas</p>
+		} else {
+			<table>
+				<thead>
+					<tr>
+						<th>Meta</th><th>Prioridade</th><th>Expira em</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for(meta <- metas){
+						<tr>
+							<th>@meta.getDescricao()</th><th>@meta.getPrioridade()</th><th></th>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+
+		<!-- jQuery -->
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<!-- Bootstrap JavaScript -->
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	</body>
+</html>
+
+
