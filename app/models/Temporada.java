@@ -15,22 +15,22 @@ import javax.persistence.OneToMany;
 import com.google.common.base.Objects;
 
 @Entity(name = "Temporada")
-public class Temporada {
+public class Temporada implements Comparable<Temporada> {
 
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	@Column
 	private int numero;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	Serie serie;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "EPISODIO")
 	List<Episodio> episodios;
-	
+
 	@Column
 	private int assistida = -1;
 
@@ -110,6 +110,17 @@ public class Temporada {
 			setAssistida(ASSISTINDO);
 		else
 			setAssistida(NEMCOMECEI);
+	}
+
+	@Override
+	public int compareTo(Temporada outra) {
+		// ordenar temporadas por número
+		int resultado = 0;
+		if (this.getNumero() < outra.getNumero())
+			resultado = -1;
+		else if (this.getNumero() > outra.getNumero())
+			resultado = 1;
+		return resultado;
 	}
 
 	@Override

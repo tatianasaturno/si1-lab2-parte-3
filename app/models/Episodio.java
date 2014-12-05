@@ -7,8 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.google.common.base.Objects;
+
 @Entity(name="Episodio")
-public class Episodio {
+public class Episodio implements Comparable<Episodio>{
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -58,5 +60,30 @@ public class Episodio {
 	public void setAssistido(boolean assistido) {
 		this.assistido = assistido;
 		temporada.checarSeAssistida();
+	}
+	
+	@Override
+	public int compareTo(Episodio outra) {
+		// ordenar temporadas por número
+		int resultado = 0;
+		if (this.getNumero() < outra.getNumero())
+			resultado = -1;
+		else if (this.getNumero() > outra.getNumero())
+			resultado = 1;
+		return resultado;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Episodio))
+			return false;
+
+		Episodio episodio = (Episodio) obj;
+		return episodio.getNome().equals(this.getNome());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.getNome());
 	}
 }
