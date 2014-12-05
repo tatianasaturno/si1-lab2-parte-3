@@ -34,7 +34,7 @@ public class ApplicationTest {
     public EntityManager em;
     public BD dao;
 
-    /*@Before
+    @Before
     public void setUp(){
         FakeApplication app = Helpers.fakeApplication(new GlobalSettings());
         Helpers.start(app);
@@ -55,14 +55,14 @@ public class ApplicationTest {
         em.getTransaction().commit();
         JPA.bindForCurrentThread(null);
         em.close();
-    }*/
+    }
     
     
 
     @Test
     public void deveIniciarSerieVazia(){
     	Serie serie = new Serie("Revenge");
-    	assertThat(serie.getTotalTemporadas()).isEqualTo(0);
+    	assertThat(serie.getTemporadasTotal()).isEqualTo(0);
         
     }
     
@@ -70,19 +70,19 @@ public class ApplicationTest {
     public void deveAdicionarTemporadas(){
     	Serie serie = new Serie("Revenge");
     	serie.addTemporada(new Temporada(1, serie));
-    	assertThat(serie.getTotalTemporadas()).isEqualTo(1);
+    	assertThat(serie.getTemporadasTotal()).isEqualTo(1);
     }
     
     @Test
     public void deveIniciarTemporadaVazia(){
     	Temporada temporada = new Temporada(1, null);
-    	assertThat(temporada.getNumEpisodios()).isEqualTo(0);
+    	assertThat(temporada.getEpisodios().size()).isEqualTo(0);
     }
     
     @Test
     public void deveAdicionarEpisodioATemporada(){
     	Temporada temporada = new Temporada(1, null);
-    	temporada.addEpisodio(new Episodio(1, "pilot", temporada));
+    	temporada.addEpisodio(new Episodio("pilot", temporada, 1));
     	assertThat(temporada.getNumEpisodios()).isEqualTo(1);
     }
     
@@ -90,47 +90,38 @@ public class ApplicationTest {
     public void deveSetarComoNaoAssistido(){
     	Serie serie = new Serie("Revenge");
     	Temporada temporada = new Temporada(1, serie);
-    	Episodio episodio = new Episodio(1, "pilot", temporada);
+    	Episodio episodio = new Episodio("pilot", temporada, 1);
+    	temporada.addEpisodio(episodio);
+    	serie.addTemporada(temporada);
     	
-    	assertThat(serie.assisti()).isEqualTo(false);
-    	assertThat(temporada.assisti()).isEqualTo(false);
-    	assertThat(episodio.assisti()).isEqualTo(false);
+    	assertThat(serie.assistindo()).isEqualTo(false);
     }
     
     @Test
     public void deveSetarParaAssistido(){
     	Serie serie = new Serie("Revenge");
     	Temporada temporada = new Temporada(1, serie);
-    	Episodio episodio = new Episodio(1, "pilot", temporada);
+    	Episodio episodio = new Episodio("pilot", temporada, 1);
+    	temporada.addEpisodio(episodio);
+    	serie.addTemporada(temporada);
     	
-    	serie.serieAssistida();
-    	temporada.temporadaAssistida();
-    	episodio.episodioAssistido();
-    	
-    	assertThat(serie.assisti()).isEqualTo(true);
-    	assertThat(temporada.assisti()).isEqualTo(true);
-    	assertThat(episodio.assisti()).isEqualTo(true);
-    }
-    
-    @Test
-    public void deveSetarParaAssistindo(){
-    	Serie serie = new Serie("Revenge");
-    	Temporada temporada = new Temporada(1, serie);
+    	serie.setAssistida(true);
     	
     	assertThat(serie.assistindo()).isEqualTo(true);
-    	assertThat(temporada.assistindo()).isEqualTo(true);
     }
     
     @Test
     public void deveInformarProximoEpisodio(){
     	Temporada temporada = new Temporada(1, null);
-    	Episodio episodio = new Episodio(1, "pilot", temporada);
-    	Episodio episodio2 = new Episodio(1, "pilot2", temporada);
+    	Episodio episodio = new Episodio("pilot", temporada, 1);
+    	Episodio episodio2 = new Episodio("outro", temporada, 2);
     	temporada.addEpisodio(episodio);
     	temporada.addEpisodio(episodio2);
-    	temporada.getEpisodios().get(0).setAssisti(true);
+    	temporada.getEpisodios().get(0).setAssistido(true);
+    	Serie serie = new Serie("Revenge");
+    	serie.addTemporada(temporada);
     	
-    	assertThat(temporada.getProximoEpisodio()).isEqualTo(2);
+    	assertThat(serie.getProximoEpisodio()).isEqualTo(episodio2);
     }
 
     /*@Test

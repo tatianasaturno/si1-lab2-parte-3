@@ -1,88 +1,97 @@
 @(series: List[Serie])
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
     <head>
-        <title>Acompanhamento de seriados</title>
+        <title>World Series</title>
         <meta charset="UTF-8">
         <meta name=description content="">
         <meta name=viewport content="width=device-width, initial-scale=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Tirar dúvidas: http://getbootstrap.com/css--> 
         <!-- Bootstrap CSS -->
 		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet" media="screen">        
  		<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" rel="javascript" media="screen"></script>
  		<script src="@routes.Assets.at("javascripts/jquery-extra.js")" rel="javascript" media="screen"></script>
     </head>
-    <body>
-    	<div class="content"><br>
-    			<h1>World Series: faça um acompanhamento de suas séries!</h1>
-    		<div class="row" style="text-align: center;">
-    			<div class="col-sm-3" style="left: 10%;">
+    <body style="background:#2E2E2E">
+    	<div class="content">
+    		<div class="jumbotron" style="background:#000000">
+    			<img style="text-align: center" src="http://i.imgur.com/TpoIKWN.jpg?1" class="img-polaroid" style="text-align: center">
+    		</div>
+    		<div class="jumbotron" style="background:#000000">
+    			<p style="color:#ABA6A6">Seja bem-vindo(a) a World Séries, um site criado para você que gosta de assistir séries. </p>
+    			<p style="color:#ABA6A6">Aqui você encontra uma listagem de séries, as quais podem ser acompanhadas, caso seja cadastrada. Para isso clique no ícone ao lado do nome da série.</p>
+    		</div>
+    		<<div class="row" style="text-align: center;">
+    			<div class="col-md-3" style="left: 10%;">
     				<div class="panel panel-info">
-		    			<h1 class="panel-title" style="font-size: xx-large;">Séries</h1>
+		    			<h1 style="font-size: xx-large;">Séries</h1>
 		    			@for(serie <- series){
 		    				@if(!serie.assistindo()){
 		    				<form method="post" action="@routes.Application.acompanharSerie()">    							
 			    					<input type="hidden" name="id" value="@serie.getId()">
 					            	<button type="submit" class="close" id="acompanharSerie"><span aria-hidden="true">&#10003;</span>
-					            	<span class="sr-only">Acompanhar serie</span></button>
+					            	<span class="sr-only">Assistir serie</span></button>
 					        	</form>
 		    				<div id="showHide" class="panel-heading span5 episodio">
 			    					<p class="unselectable">@serie.getNome()</p>			    					
 			    			</div>
 			    				<ul class="lista list-group episodio">			    				
 			    					@for(temporada <- serie.getTemporadas()){
-			    						<li style="background-color: gray;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    						<li style="background-color: #BDBDBD;" class="list-group-item">Temporada @temporada.getNumero</li>
 			    					}
 			    				</ul>
 		    				}
 		    			}
     				</div>
     			</div>
-    			<div class="col-sm-3" style="left: 20%">
-    				<div class="panel panel-default">
-		    			<h1 class="panel-title" style="font-size: xx-large;">Acompanhando</h1>
+    			<div class="col-md-3" style="left: 30%">
+    				<div class="panel panel-warning">
+		    			<h1 style="font-size: xx-large;">Assistindo</h1>		    			
 		    			@for(serie <- series){
-		    				@if(serie.assistindo()){
+		    				
+		    				@if(serie.assistindo()){		    							    					
+		    						<li style="background-color: #000000;" style="font-style: oblique;" class="list-group-item list-group-item-danger">Proximo episódio: @serie.getProximoEpisodio().getNome()</li>
 			    				<div id="showHide" class="panel-heading span5">
 			    					<span class="unselectable">@serie.getNome()</span>
 			    				</div>
 			    				<ul class="lista list-group">
 			    					@for(temporada <- serie.getTemporadas()){
 			    					<div class="span5 episodio">
-			    						@if(temporada.assisti().equals(false)){
-			    							<li style="background-color: gray;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    						@if(temporada.getAssistida().equals(-1)){
+			    							<li class="list-group-item list-group-item-warning">Temporada @temporada.getNumero</li>
 			    						}else{
-			    							@if(temporada.assisti().equals(true)){
-			    							<li style="background-color: yellow;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    							@if(temporada.getAssistida().equals(0)){
+			    							<li class="list-group-item list-group-item-warning">Temporada @temporada.getNumero</li>
 			    							}else{
-			    								<li style="background-color: #33CC33;" class="list-group-item">Temporada @temporada.getNumTemporada</li>
+			    								<li class="list-group-item list-group-item-info">Temporada @temporada.getNumero</li>
 			    							}
 			    						}
 			    						</div>
 				    						<ul class="lista list-group episodio">
 				    							@for(episodio <- temporada.getEpisodios()){
-				    								@if(episodio.assisti()){				    									
-				    									<li style="background-color: #33CC33;" class="list-group-item">@episodio.getNome</li>
-				    								}else{<li style="background-color: gray;" class="list-group-item">
+				    								@if(episodio.isAssistido()){				    									
+				    									<li class="list-group-item list-group-item-info">@episodio.getNome</li>
+				    								}else{<li class="list-group-item list-group-item-danger">
 				    									<form method="post" action="@routes.Application.assistirAEpisodio()">    							
 			    											<input type="hidden" name="id" value="@episodio.getId()">
 					            							<button type="submit" class="close" id="assistirAEpisodio"><span aria-hidden="true">&#10003;</span>
-					            							<span class="sr-only">Assistir episodio</span></button>
+					            							<span class="sr-only">Assistir a episódio</span></button>
 					        							</form>
 				    									@episodio.getNome</li>
 				    								}
 				    							}
 				    						</ul>
+				    						<br>
 			    					}
 			    				</ul>
+			    				<br>
 		    				}
 		    			}
     				</div>
     			</div>
-    		</div>
-    		<div class="col-sm-5">
-    			
-    		</div>
+    		</div>    		
     	</div>    
    	</body>
 </html>
