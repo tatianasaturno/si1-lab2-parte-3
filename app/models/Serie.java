@@ -24,7 +24,7 @@ public class Serie implements Comparable<Serie> {
 	@JoinColumn(name = "TEMPORADA")
 	private List<Temporada> temporadas;
 	@Column
-	private boolean acompanhando;
+	private boolean assistindo;
 
 	public Serie() {
 		this.temporadas = new ArrayList<Temporada>();
@@ -64,11 +64,11 @@ public class Serie implements Comparable<Serie> {
 	}
 
 	public boolean assistindo() {
-		return acompanhando;
+		return assistindo;
 	}
 
 	public void setAssistida(boolean acompanhando) {
-		this.acompanhando = acompanhando;
+		this.assistindo = acompanhando;
 	}
 
 	public int getTemporadasTotal() {
@@ -87,8 +87,7 @@ public class Serie implements Comparable<Serie> {
 				if (episodios.get(i - 1).isAssistido()) {
 					if (i == episodios.size()) {
 							return new Episodio(
-									"último episódio assistido",
-									new Temporada(0, this), 0);
+									"último episódio assistido", 0);
 						
 					} else {
 						return episodios.get(i);
@@ -96,8 +95,7 @@ public class Serie implements Comparable<Serie> {
 				}
 			}
 		}
-		return new Episodio("Nenhum episódio assistido",
-				new Temporada(0, this), 0);
+		return new Episodio("Nenhum episódio assistido", 0);
 	}
 
 	@Override

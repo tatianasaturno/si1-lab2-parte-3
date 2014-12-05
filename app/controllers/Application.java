@@ -16,7 +16,7 @@ import views.html.index;
 
 public class Application extends Controller {
 	private static final BD bd = new BD();
-	private static Form<Serie> serieForm = Form.form(Serie.class);
+	private static Form<Serie> formulario = Form.form(Serie.class);
 	
 	@Transactional
     public static Result index() {		
@@ -27,7 +27,7 @@ public class Application extends Controller {
 	
 	@Transactional
 	public static Result acompanharSerie() {
-		Form<Serie> filledForm = serieForm.bindFromRequest();
+		Form<Serie> filledForm = formulario.bindFromRequest();
 		if (filledForm.hasErrors()) {
             List<Serie> result = bd.findAllByClass(Serie.class);
 			return badRequest(views.html.index.render(result));
@@ -45,7 +45,7 @@ public class Application extends Controller {
 	
 	@Transactional
 	public static Result assistirAEpisodio() {
-		Form<Serie> filledForm = serieForm.bindFromRequest();
+		Form<Serie> filledForm = formulario.bindFromRequest();
 		if (filledForm.hasErrors()) {
             List<Serie> result = bd.findAllByClass(Serie.class);
 			return badRequest(views.html.index.render(result));

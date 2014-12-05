@@ -42,7 +42,7 @@ public class Temporada implements Comparable<Temporada> {
 		this.episodios = new ArrayList<Episodio>();
 	}
 
-	public Temporada(int numero, Serie serie) {
+	public Temporada(int numero) {
 		this();
 		this.numero = numero;
 		this.serie = serie;

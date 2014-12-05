@@ -18,16 +18,13 @@ public class Episodio implements Comparable<Episodio>{
 	private String nome;
 	@Column
 	private int numero;
-	@ManyToOne(cascade=CascadeType.ALL)
-	Temporada temporada;
 	@Column
 	private boolean assistido;
 	
 	public Episodio(){
 	}
-	public Episodio(String nome, Temporada temporada, int numero){
+	public Episodio(String nome, int numero){
 		this.nome = nome;
-		this.temporada = temporada;
 		this.numero = numero;
 	}
 	public int getNumero() {
@@ -48,18 +45,12 @@ public class Episodio implements Comparable<Episodio>{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Temporada getTemporada() {
-		return temporada;
-	}
-	public void setTemporada(Temporada temporada) {
-		this.temporada = temporada;
+	
+	public void setAssistido(boolean assistido) {
+		this.assistido = assistido;
 	}
 	public boolean isAssistido() {
 		return assistido;
-	}
-	public void setAssistido(boolean assistido) {
-		this.assistido = assistido;
-		temporada.checarSeAssistida();
 	}
 	
 	@Override

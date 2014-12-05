@@ -50,8 +50,8 @@ public class Global extends GlobalSettings {
 			br = new BufferedReader(new FileReader(csvFile));
 			String[] info = line.split(cvsSplitBy);
 			Serie serie = new Serie("South Park");
-			Temporada temporada =  new Temporada(1, serie);
-			Episodio episodio = new Episodio("Cartman Gets an Anal Probe", temporada, 1);
+			Temporada temporada =  new Temporada(1);
+			Episodio episodio = new Episodio("Cartman Gets an Anal Probe", 1);
 			temporada.addEpisodio(episodio);
 			serie.addTemporada(temporada);
 			line = br.readLine();
@@ -62,27 +62,27 @@ public class Global extends GlobalSettings {
 				if (serie.getNome().equals(info[0])){
 					if (serie.getTemporadasTotal()!=0 && serie.getUltimaTemporada().getNumero()==Integer.parseInt(info[1])) {
 						if (info.length>=4)
-							episodio = new Episodio(info[3], serie.getUltimaTemporada(),Integer.parseInt(info[2]));
+							episodio = new Episodio(info[3], Integer.parseInt(info[2]));
 						else
-							episodio = new Episodio("", serie.getUltimaTemporada(),Integer.parseInt(info[2]));
+							episodio = new Episodio("", Integer.parseInt(info[2]));
 						serie.getUltimaTemporada().addEpisodio(episodio);
 					} else{
-						temporada = new Temporada(Integer.parseInt(info[1]),serie);
+						temporada = new Temporada(Integer.parseInt(info[1]));
 						if (info.length>=4)
-							episodio = new Episodio(info[3], serie.getUltimaTemporada(),Integer.parseInt(info[2]));
+							episodio = new Episodio(info[3], Integer.parseInt(info[2]));
 						else
-							episodio = new Episodio("", serie.getUltimaTemporada(),Integer.parseInt(info[2]));
+							episodio = new Episodio("", Integer.parseInt(info[2]));
 						temporada.addEpisodio(episodio);
 						serie.addTemporada(temporada);
 					}
 				} else{
 					bd.persist(serie);
 					serie = new Serie(info[0]);
-					temporada = new Temporada(Integer.parseInt(info[1]),serie);
+					temporada = new Temporada(Integer.parseInt(info[1]));
 					if (info.length>=4)
-						episodio = new Episodio(info[3], temporada,Integer.parseInt(info[2]));
+						episodio = new Episodio(info[3], Integer.parseInt(info[2]));
 					else
-						episodio = new Episodio("", temporada,Integer.parseInt(info[2]));
+						episodio = new Episodio("", Integer.parseInt(info[2]));
 					temporada.addEpisodio(episodio);
 					serie.addTemporada(temporada);
 				}
