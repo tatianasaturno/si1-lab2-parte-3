@@ -13,6 +13,10 @@ import javax.persistence.OneToMany;
 
 import com.google.common.base.Objects;
 
+/**
+ * @author Tatiana Saturno da Silva
+ *
+ */
 @Entity(name = "Serie")
 public class Serie implements Comparable<Serie> {
 	@Id
@@ -30,6 +34,10 @@ public class Serie implements Comparable<Serie> {
 		this.temporadas = new ArrayList<Temporada>();
 	}
 
+	/**
+	 * Construtor da série que também inicializa a lista temporadas
+	 * @param nome
+	 */
 	public Serie(String nome) {
 		this();
 		this.nome = nome;
@@ -67,10 +75,16 @@ public class Serie implements Comparable<Serie> {
 		this.temporadas.add(temporada);
 	}
 
+	/**
+	 * @return verifica se está assistindo a série
+	 */
 	public boolean assistindo() {
 		return assistindo;
 	}
 
+	/**
+	 * @param acompanhando
+	 */
 	public void setAssistida(boolean acompanhando) {
 		this.assistindo = acompanhando;
 	}
@@ -83,27 +97,25 @@ public class Serie implements Comparable<Serie> {
 		return temporadas.get(temporadas.size() - 1);
 	}
 
+	/**
+	 * @return próximo episódio com base no número de episódios assistidos
+	 */
 	public Episodio getProximoEpisodio() {
 		//Vale ressaltar que esse método segue a premissa de que
 		//o usuário assista episódios na sequência correta (1, 2, 3, ..., n)
-		Episodio epProximo = new Episodio("Nenhum episódio assistido", 0);;
-			if(this.getTemporadasTotal() > 0){ //checando se a temporada tem mais de
-				for(Temporada t: this.getTemporadas()){
-					if(t.getNumEpisodios() > 0){
-						if(t.isAssistindo()){
-							epProximo = t.getEpisodioPeloIndice(t.getTotalDeEpisodiosAssistidos());
-						}
-						else if(t.assisti()){
-							epProximo = new Episodio("Último episódio assistido", 0);
-						}else{
-							epProximo = t.getEpisodioPeloIndice(0);
-						}
-						
-					}
+		for (int k = this.getTemporadasTotal(); k > 0; k--) {
+			
+			List<Episodio> episodios = this.getTemporadas().get(k - 1)
+					.getEpisodios();
+			for (int i = episodios.size(); i > 0; i--) {
+				if (episodios.get(i - 1).isAssistido()) {
+					if(this.getTemporadas().get(k - 1).assisti()) return new Episodio(
+							"Último episódio assistido", 0);
+						return episodios.get(i);
+				}
 			}
-			}
-		
-		return epProximo;
+		}
+		return new Episodio("Nenhum episódio assistido", 0);
 	}
 	
 	public Temporada getTemporadaPeloIndice(int i){

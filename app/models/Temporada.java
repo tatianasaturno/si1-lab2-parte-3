@@ -9,10 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.google.common.base.Objects;
+
+/**
+ * @author Tatiana Saturno da Silva
+ *
+ */
 
 @Entity(name = "Temporada")
 public class Temporada implements Comparable<Temporada> {
@@ -24,16 +28,13 @@ public class Temporada implements Comparable<Temporada> {
 	@Column
 	private int numero;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	Serie serie;
-
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "EPISODIO")
 	List<Episodio> episodios;
 
 	@Column
 	private int assistida = -1;
-	
+
 	@Column
 	private int totalDeEpisodiosAssistidos;
 
@@ -48,7 +49,6 @@ public class Temporada implements Comparable<Temporada> {
 	public Temporada(int numero) {
 		this();
 		this.numero = numero;
-		this.serie = serie;
 		totalDeEpisodiosAssistidos = 0;
 	}
 
@@ -66,14 +66,6 @@ public class Temporada implements Comparable<Temporada> {
 
 	public void setNumero(int numero) {
 		this.numero = numero;
-	}
-
-	public Serie getSerie() {
-		return serie;
-	}
-
-	public void setSerie(Serie serie) {
-		this.serie = serie;
 	}
 
 	public List<Episodio> getEpisodios() {
@@ -96,8 +88,8 @@ public class Temporada implements Comparable<Temporada> {
 	public int getTotalDeEpisodiosAssistidos() {
 		return totalDeEpisodiosAssistidos;
 	}
-	
-	public Episodio getEpisodioPeloIndice(int i){
+
+	public Episodio getEpisodioPeloIndice(int i) {
 		return episodios.get(i);
 	}
 
@@ -109,28 +101,37 @@ public class Temporada implements Comparable<Temporada> {
 		if (assistida >= -1 && assistida <= 1)
 			this.assistida = assistida;
 	}
-	
-	public boolean assisti(){
+
+	public boolean assisti() {
 		checarSeAssistida();
-		
+
 		boolean resultado = false;
-		if(getAssistida() == ASSISTI) resultado = true;
+		if (getAssistida() == ASSISTI)
+			resultado = true;
 		return resultado;
 	}
-	
-	public boolean isAssistindo(){
+
+	/**
+	 * @return se está assistindo a temporada
+	 */
+	public boolean isAssistindo() {
 		checarSeAssistida();
-		
+
 		boolean resultado = false;
-		if(getAssistida() == ASSISTINDO) resultado = true;
+		if (getAssistida() == ASSISTINDO)
+			resultado = true;
 		return resultado;
 	}
-	
-	public boolean isNemComecei(){
+
+	/**
+	 * @return se não viu nenhum episódio da série
+	 */
+	public boolean isNemComecei() {
 		checarSeAssistida();
-		
+
 		boolean resultado = false;
-		if(getAssistida() == NEMCOMECEI) resultado = true;
+		if (getAssistida() == NEMCOMECEI)
+			resultado = true;
 		return resultado;
 	}
 
@@ -144,7 +145,7 @@ public class Temporada implements Comparable<Temporada> {
 				contador += 1;
 			}
 		}
-		
+
 		totalDeEpisodiosAssistidos = contador;
 		if (contador == episodios.size())
 			setAssistida(ASSISTI);
@@ -166,19 +167,8 @@ public class Temporada implements Comparable<Temporada> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Temporada))
-			return false;
-
-		Temporada temporada = (Temporada) obj;
-		return temporada.getNumero() == this.getNumero()
-				&& temporada.getSerie().equals(this.getSerie())
-				&& temporada.getNumEpisodios() == this.getNumEpisodios();
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hashCode(this.getSerie(), this.getNumero(),
+		return Objects.hashCode(this.getNumero(),
 				this.getNumEpisodios());
 	}
 }

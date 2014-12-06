@@ -1,12 +1,9 @@
 package models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import com.google.common.base.Objects;
 
 @Entity(name="Episodio")
@@ -23,10 +20,16 @@ public class Episodio implements Comparable<Episodio>{
 	
 	public Episodio(){
 	}
+	
+	/**
+	 * @param nome
+	 * @param numero
+	 */
 	public Episodio(String nome, int numero){
 		this.nome = nome;
 		this.numero = numero;
 	}
+	
 	public int getNumero() {
 		return numero;
 	}

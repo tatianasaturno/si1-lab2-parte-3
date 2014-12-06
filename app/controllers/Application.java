@@ -5,9 +5,7 @@ import java.util.List;
 
 import models.Episodio;
 import models.Serie;
-import models.Temporada;
 import models.bd.BD;
-import play.Logger;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;

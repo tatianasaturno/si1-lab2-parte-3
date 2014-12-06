@@ -1,6 +1,4 @@
 import static org.fest.assertions.Assertions.assertThat;
-import static play.test.Helpers.contentAsString;
-import static play.test.Helpers.contentType;
 
 import java.util.List;
 
@@ -14,31 +12,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import play.GlobalSettings;
-import play.Logger;
 import play.db.jpa.JPA;
 import play.db.jpa.JPAPlugin;
 import play.test.FakeApplication;
 import play.test.Helpers;
-import play.twirl.api.Html;
 import scala.Option;
 import views.html.index;
 
 import javax.persistence.EntityManager;
 
-public class TestesComBD {
+public class TestaSeries {
 	BD bd = new BD();
 	Serie serie1 = new Serie("Arrow");
 	Serie serie2 = new Serie("Chuck");
 	Temporada temporada1 = new Temporada(1);
-	Temporada temporada2 = new Temporada(1);
 	Episodio episodio1S1 = new Episodio("Pilot", 1);
 	Episodio episodio2S1 = new Episodio("Honor Thy Father", 2);
 	Episodio episodio3S1 = new Episodio("Lone Gunmen", 3);
-	Episodio episodio4S1 = new Episodio("An Innocent Man", 4);
-	Episodio episodio1S2 = new Episodio("Chuck Versus the Intersect", 1);
-	Episodio episodio2S2 = new Episodio("Chuck Versus the Helicopter", 2);
-	Episodio episodio3S2 = new Episodio("Chuck Versus the Tango", 3);
-	Episodio episodio4S2 = new Episodio("Chuck Versus the Wookiee", 4);
 	List<Serie> series;
 	public EntityManager em;
 
@@ -156,38 +146,33 @@ public class TestesComBD {
 		serie1.addTemporada(temporada1);
 		bd.persist(serie1);
 		series = bd.findAllByClass(Serie.class);
+		System.out.println(series.get(0).getProximoEpisodio().getNome());
 		assertThat(
 				series.get(0).getProximoEpisodio().getNome() == "Nenhum episódio assistido")
 				.isTrue();
 		
 		temporada1.addEpisodio(episodio1S1);
 		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getProximoEpisodio().getNome() == "Pilot")
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Nenhum episódio assistido")
 				.isTrue();
-
-		temporada1.addEpisodio(episodio2S1);
-		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getProximoEpisodio().getNome() == "Pilot").isTrue();
-
+		
 		episodio1S1.setAssistido(true);
+		temporada1.addEpisodio(episodio2S1);
 		series = bd.findAllByClass(Serie.class);
 		assertThat(series.get(0).getProximoEpisodio().getNome() == "Honor Thy Father")
 				.isTrue();
-		
-		temporada1.addEpisodio(episodio3S1);
-		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getProximoEpisodio().getNome() == "Honor Thy Father").isTrue();
-		
+
 		episodio2S1.setAssistido(true);
 		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getProximoEpisodio().getNome() == "Lone Gunmen")
-				.isTrue();
+		temporada1.addEpisodio(episodio3S1);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Lone Gunmen").isTrue();
 		
 		episodio3S1.setAssistido(true);
 		series = bd.findAllByClass(Serie.class);
 		assertThat(series.get(0).getProximoEpisodio().getNome() == "Último episódio assistido")
 				.isTrue();
-
+		
 	}
 
 }
