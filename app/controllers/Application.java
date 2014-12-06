@@ -32,7 +32,7 @@ public class Application extends Controller {
 		} else {
 			long id = Long.parseLong(filledForm.data().get("id"));
 			Serie serie = bd.findByEntityId(Serie.class, id);			
-			serie.setAssistida(true);
+			serie.setAssistindo(true);
             
 			bd.merge(serie);
 			bd.flush();

@@ -41,15 +41,17 @@ public class Temporada implements Comparable<Temporada> {
 	private final int ASSISTI = 1;
 	private final int ASSISTINDO = 0;
 	private final int NEMCOMECEI = -1;
+	private boolean assistindoForaDeOrdem;
 
 	public Temporada() {
 		this.episodios = new ArrayList<Episodio>();
+		assistindoForaDeOrdem = false;
+		totalDeEpisodiosAssistidos = 0;
 	}
 
 	public Temporada(int numero) {
 		this();
 		this.numero = numero;
-		totalDeEpisodiosAssistidos = 0;
 	}
 
 	public Long getId() {
@@ -134,6 +136,21 @@ public class Temporada implements Comparable<Temporada> {
 			resultado = true;
 		return resultado;
 	}
+	
+	/**
+	 * @param numEpisodio 
+	 * @return se o usuário está assistindo episódios fora da ordem (1,2,3,...,n)
+	 */
+	public boolean isAssistindoForaDeOrdem(int numEpisodio){
+		foraDeOrdem(numEpisodio);
+		return assistindoForaDeOrdem;
+	}
+	
+	
+
+	public void setAssistindoForaDeOrdem(boolean assistindoForaDeOrdem) {
+		this.assistindoForaDeOrdem = assistindoForaDeOrdem;
+	}
 
 	/**
 	 * Checa se foi assistida
@@ -153,6 +170,11 @@ public class Temporada implements Comparable<Temporada> {
 			setAssistida(ASSISTINDO);
 		else
 			setAssistida(NEMCOMECEI);
+	}
+	
+	private void foraDeOrdem(int numEpisodio){
+		//checa se episódio foi visto fora de ordem (1, 2, 3, ..., n)
+		setAssistindoForaDeOrdem(numEpisodio > getTotalDeEpisodiosAssistidos()); 
 	}
 
 	@Override

@@ -36,17 +36,18 @@ public class Serie implements Comparable<Serie> {
 
 	/**
 	 * Construtor da série que também inicializa a lista temporadas
+	 * 
 	 * @param nome
 	 */
 	public Serie(String nome) {
 		this();
 		this.nome = nome;
 	}
-	
-	public boolean isEmpty(){
+
+	public boolean isEmpty() {
 		return temporadas.size() == 0;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -69,6 +70,7 @@ public class Serie implements Comparable<Serie> {
 
 	/**
 	 * Adiciona temporada
+	 * 
 	 * @param temporada
 	 */
 	public void addTemporada(Temporada temporada) {
@@ -83,10 +85,10 @@ public class Serie implements Comparable<Serie> {
 	}
 
 	/**
-	 * @param acompanhando
+	 * @param assistindo
 	 */
-	public void setAssistida(boolean acompanhando) {
-		this.assistindo = acompanhando;
+	public void setAssistindo(boolean assistindo) {
+		this.assistindo = assistindo;
 	}
 
 	public int getTemporadasTotal() {
@@ -101,25 +103,42 @@ public class Serie implements Comparable<Serie> {
 	 * @return próximo episódio com base no número de episódios assistidos
 	 */
 	public Episodio getProximoEpisodio() {
-		//Vale ressaltar que esse método segue a premissa de que
-		//o usuário assista episódios na sequência correta (1, 2, 3, ..., n)
+		// Vale ressaltar que esse método segue a premissa de que
+		// o usuário assista episódios na sequência correta (1, 2, 3, ..., n)
 		for (int k = this.getTemporadasTotal(); k > 0; k--) {
-			
+
 			List<Episodio> episodios = this.getTemporadas().get(k - 1)
 					.getEpisodios();
 			for (int i = episodios.size(); i > 0; i--) {
 				if (episodios.get(i - 1).isAssistido()) {
-					if(this.getTemporadas().get(k - 1).assisti()) return new Episodio(
-							"Último episódio assistido", 0);
-						return episodios.get(i);
+					if (this.getTemporadas().get(k - 1).assisti()
+							|| episodios.get(i - 1).getNumero() == this
+									.getTemporadas().get(k - 1)
+									.getNumEpisodios())
+						return new Episodio("Último episódio assistido", 0);
+					return episodios.get(i);
 				}
 			}
 		}
 		return new Episodio("Nenhum episódio assistido", 0);
 	}
-	
-	public Temporada getTemporadaPeloIndice(int i){
+
+	public Temporada getTemporadaPeloIndice(int i) {
 		return temporadas.get(i);
+	}
+	
+	public boolean assisti(){
+		int contador=0;
+		boolean resultado = false;
+		for(int i=0; i<getTemporadasTotal(); i++){
+			if(getTemporadaPeloIndice(i).assisti()) contador++;
+		}
+		
+		if( contador == getTemporadasTotal()){
+			setAssistindo(false);
+			resultado = true;
+		}
+		return resultado;
 	}
 
 	@Override
@@ -127,7 +146,7 @@ public class Serie implements Comparable<Serie> {
 		// ordenar serie por ordem alfabetica
 		return this.getNome().compareToIgnoreCase(outra.getNome());
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof Serie))

@@ -1,5 +1,6 @@
 @(series: List[Serie])
 <!DOCTYPE html>
+
 <html lang="pt-BR">
     <head>
         <title>World Series</title>
@@ -14,17 +15,18 @@
  		<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" rel="javascript" media="screen"></script>
  		<script src="@routes.Assets.at("javascripts/jquery-extra.js")" rel="javascript" media="screen"></script>
     </head>
-    <body style="background:#2E2E2E">
-    	<div class="content">
+    
+    <body background="http://marketingfunnelautomation.com/wp-content/uploads/2014/03/Black-Background-Wood-2560x1600-by-Freeman-1200x750.jpg">
+    	<div class="painel">
     		<div class="jumbotron" style="background:#000000">
-    			<img style="text-align: center" src="http://i.imgur.com/TpoIKWN.jpg?1" class="img-polaroid" style="text-align: center">
+    			<img src="http://i.imgur.com/C8nlKlo.jpg?1" class="img-polaroid">
     		</div>
     		<div class="jumbotron" style="background:#000000">
     			<p style="color:#ABA6A6">Seja bem-vindo(a) a World Séries, um site criado para você que gosta de assistir séries. </p>
     			<p style="color:#ABA6A6">Aqui você encontra uma listagem de séries, as quais podem ser acompanhadas, caso seja cadastrada. Para isso clique no ícone ao lado do nome da série.</p>
     		</div>
     		<<div class="row" style="text-align: center;">
-    			<div class="col-md-3" style="left: 10%;">
+    			<div class="col-md-3" style="left: 5%;">
     				<div class="panel panel-info">
 		    			<h1 style="font-size: xx-large;">Séries</h1>
 		    			@for(serie <- series){
@@ -46,14 +48,17 @@
 		    			}
     				</div>
     			</div>
-    			<div class="col-md-3" style="left: 30%">
+    			
+    				
+    			<div class="col-md-3" style="left: 10%">
     				<div class="panel panel-warning">
 		    			<h1 style="font-size: xx-large;">Assistindo</h1>		    			
 		    			@for(serie <- series){
 		    				
 		    				@if(serie.assistindo()){		    							    					
-		    						<li style="background-color: #000000;" style="font-style: oblique;" class="list-group-item list-group-item-danger">Proximo episódio: @serie.getProximoEpisodio().getNome()</li>
-			    				<div id="showHide" class="panel-heading span5">
+		    					
+			    					<li style="background-color: #000000;" style="font-style: oblique;" class="list-group-item list-group-item-danger">Proximo episódio: @serie.getProximoEpisodio().getNome()</li>
+			    					<div id="showHide" class="panel-heading span5">
 			    					<span class="unselectable">@serie.getNome()</span>
 			    				</div>
 			    				<ul class="lista list-group">
@@ -91,6 +96,36 @@
 		    			}
     				</div>
     			</div>
+    			<div class="col-md-3" style="left: 15%">
+    			<div class="panel panel-danger">
+    			    <h1 style="font-size: xx-large;">Assistidas</h1>
+    				@for(serie <- series){
+    					@if(serie.assisti()){
+			    				<div id="showHide" class="panel-heading span5" style="background-color: #C4FBA7;">
+			    				<span class="unselectable">@serie.getNome()</span>
+			    				</div>
+			    				<ul class="lista list-group">
+			    					@for(temporada <- serie.getTemporadas()){
+			    					<div class="span5 episodio">
+			    							<li class="list-group-item list-group-item-info">Temporada @temporada.getNumero</li>
+			    							
+			    						
+			    						</div>
+				    						<ul class="lista list-group episodio">
+				    							@for(episodio <- temporada.getEpisodios()){			    									
+				    									<li class="list-group-item list-group-item-info">@episodio.getNome</li>
+				    								
+				    							}
+				    						</ul>
+				    						<br>
+			    					}
+			    					}
+			    					
+			    				</ul>
+    					}
+    					</div>
+    					
+    			</div>  		
     		</div>    		
     	</div>    
    	</body>
