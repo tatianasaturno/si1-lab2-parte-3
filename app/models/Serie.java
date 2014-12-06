@@ -34,7 +34,11 @@ public class Serie implements Comparable<Serie> {
 		this();
 		this.nome = nome;
 	}
-
+	
+	public boolean isEmpty(){
+		return temporadas.size() == 0;
+	}
+	
 	public Long getId() {
 		return id;
 	}

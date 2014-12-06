@@ -93,6 +93,30 @@ public class Temporada implements Comparable<Temporada> {
 		if (assistida >= -1 && assistida <= 1)
 			this.assistida = assistida;
 	}
+	
+	public boolean assisti(){
+		checarSeAssistida();
+		
+		boolean resultado = false;
+		if(getAssistida() == ASSISTI) resultado = true;
+		return resultado;
+	}
+	
+	public boolean isAssistindo(){
+		checarSeAssistida();
+		
+		boolean resultado = false;
+		if(getAssistida() == ASSISTINDO) resultado = true;
+		return resultado;
+	}
+	
+	public boolean isNemComecei(){
+		checarSeAssistida();
+		
+		boolean resultado = false;
+		if(getAssistida() == NEMCOMECEI) resultado = true;
+		return resultado;
+	}
 
 	/**
 	 * Checa se foi assistida
