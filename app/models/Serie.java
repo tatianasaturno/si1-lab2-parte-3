@@ -84,22 +84,24 @@ public class Serie implements Comparable<Serie> {
 	}
 
 	public Episodio getProximoEpisodio() {
-		for (int k = this.getTemporadasTotal(); k > 0; k--) {
-			List<Episodio> episodios = this.getTemporadas().get(k - 1)
-					.getEpisodios();
-			for (int i = episodios.size(); i > 0; i--) {
-				if (episodios.get(i - 1).isAssistido()) {
-					if (i == episodios.size()) {
-							return new Episodio(
-									"último episódio assistido", 0);
+		Episodio epProximo = new Episodio("Nenhum episódio assistido", 0);;
+			if(this.getTemporadasTotal() > 0){ //checando se a temporada tem mais de
+				for(Temporada t: this.getTemporadas()){
+					if(t.getNumEpisodios() > 0){
+						if(t.isAssistindo()){
+							epProximo = t.getEpisodioPeloIndice(t.getTotalDeEpisodiosAssistidos());
+						}
+						else if(t.assisti()){
+							epProximo = new Episodio("último episódio assistido", 0);
+						}else{
+							epProximo = t.getEpisodioPeloIndice(0);
+						}
 						
-					} else {
-						return episodios.get(i);
 					}
-				}
 			}
-		}
-		return new Episodio("Nenhum episódio assistido", 0);
+			}
+		
+		return epProximo;
 	}
 
 	@Override

@@ -143,11 +143,39 @@ public class TestesComBD {
 		assertThat(series.get(0).getTemporadas().get(0).isAssistindo())
 				.isTrue();
 		episodio3S1.setAssistido(true);
-		assertThat(series.get(0).getTemporadas().get(0).assisti())
-				.isTrue();
+		assertThat(series.get(0).getTemporadas().get(0).assisti()).isTrue();
 		temporada1.addEpisodio(episodio2S1);
 		assertThat(series.get(0).getTemporadas().get(0).isAssistindo())
 				.isTrue();
+	}
+
+	@Test
+	public void deveInformarProximoEpisodio() {
+		serie1.addTemporada(temporada1);
+		bd.persist(serie1);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(
+				series.get(0).getProximoEpisodio().getNome() == "Nenhum episódio assistido")
+				.isTrue();
+		
+		temporada1.addEpisodio(episodio1S1);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Pilot")
+				.isTrue();
+
+		temporada1.addEpisodio(episodio2S1);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Pilot").isTrue();
+
+		episodio1S1.setAssistido(true);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Honor Thy Father")
+				.isTrue();
+		
+		temporada1.addEpisodio(episodio3S1);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Honor Thy Father").isTrue();
+
 	}
 
 }

@@ -34,31 +34,6 @@ public class TestesSemBD {
     public EntityManager em;
     public BD bd;
 
-    @Before
-    public void setUp(){
-        FakeApplication app = Helpers.fakeApplication(new GlobalSettings());
-        Helpers.start(app);
-        
-        Option<JPAPlugin> jpaPlugin = app.getWrappedApplication().plugin(JPAPlugin.class);
-        
-        em = jpaPlugin.get().em("default");
-        JPA.bindForCurrentThread(em);
-        em.getTransaction().begin();
-        
-        bd = new BD();
-    }
-    
-    
-
-    @After
-    public void tearDown() {
-        em.getTransaction().commit();
-        JPA.bindForCurrentThread(null);
-        em.close();
-    }
-    
-    
-
     @Test
     public void deveIniciarSerieVazia(){
     	Serie serie = new Serie("Revenge");

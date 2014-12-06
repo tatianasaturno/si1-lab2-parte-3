@@ -33,6 +33,9 @@ public class Temporada implements Comparable<Temporada> {
 
 	@Column
 	private int assistida = -1;
+	
+	@Column
+	private int totalDeEpisodiosAssistidos;
 
 	private final int ASSISTI = 1;
 	private final int ASSISTINDO = 0;
@@ -46,6 +49,7 @@ public class Temporada implements Comparable<Temporada> {
 		this();
 		this.numero = numero;
 		this.serie = serie;
+		totalDeEpisodiosAssistidos = 0;
 	}
 
 	public Long getId() {
@@ -89,6 +93,18 @@ public class Temporada implements Comparable<Temporada> {
 		return episodios.size();
 	}
 
+	public int getTotalDeEpisodiosAssistidos() {
+		return totalDeEpisodiosAssistidos;
+	}
+	
+	public Episodio getEpisodioPeloIndice(int i){
+		return episodios.get(i);
+	}
+
+	public void setTotalDeEpisodiosAssistidos(int totalDeEpisodiosAssistidos) {
+		this.totalDeEpisodiosAssistidos = totalDeEpisodiosAssistidos;
+	}
+
 	public void setAssistida(int assistida) {
 		if (assistida >= -1 && assistida <= 1)
 			this.assistida = assistida;
@@ -128,6 +144,8 @@ public class Temporada implements Comparable<Temporada> {
 				contador += 1;
 			}
 		}
+		
+		totalDeEpisodiosAssistidos = contador;
 		if (contador == episodios.size())
 			setAssistida(ASSISTI);
 		else if (contador > 0)
