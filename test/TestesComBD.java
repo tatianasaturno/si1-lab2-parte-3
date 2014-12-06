@@ -85,7 +85,7 @@ public class TestesComBD {
 		series = bd.findAllByClass(Serie.class);
 		assertThat(series.get(0).getTemporadasTotal() == 1).isTrue();
 		assertThat(
-				series.get(0).getTemporadas().get(0).getEpisodios().size() == 0)
+				series.get(0).getTemporadaPeloIndice(0).getEpisodios().size() == 0)
 				.isTrue();
 	}
 
@@ -95,10 +95,10 @@ public class TestesComBD {
 		temporada1.addEpisodio(episodio1S1);
 		bd.persist(serie1);
 		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getTemporadas().get(0).getNumEpisodios() == 1)
+		assertThat(series.get(0).getTemporadaPeloIndice(0).getNumEpisodios() == 1)
 				.isTrue();
 		assertThat(
-				series.get(0).getTemporadas().get(0).getEpisodios().get(0)
+				series.get(0).getTemporadaPeloIndice(0).getEpisodioPeloIndice(0)
 						.getNome()).isEqualTo("Pilot");
 	}
 
@@ -121,12 +121,14 @@ public class TestesComBD {
 		bd.persist(serie1);
 		series = bd.findAllByClass(Serie.class);
 		assertThat(
-				series.get(0).getTemporadas().get(0).getEpisodios().get(0)
+				series.get(0).getTemporadaPeloIndice(0).getEpisodioPeloIndice(0)
 						.isAssistido()).isFalse();
+		assertThat(
+				series.get(0).getTemporadaPeloIndice(0).getTotalDeEpisodiosAssistidos() == 0).isTrue();
 		episodio1S1.setAssistido(true);
 		series = bd.findAllByClass(Serie.class);
 		assertThat(
-				series.get(0).getTemporadas().get(0).getEpisodios().get(0)
+				series.get(0).getTemporadaPeloIndice(0).getEpisodioPeloIndice(0)
 						.isAssistido()).isTrue();
 	}
 
@@ -137,15 +139,15 @@ public class TestesComBD {
 		temporada1.addEpisodio(episodio3S1);
 		bd.persist(serie1);
 		series = bd.findAllByClass(Serie.class);
-		assertThat(series.get(0).getTemporadas().get(0).isNemComecei())
+		assertThat(series.get(0).getTemporadaPeloIndice(0).isNemComecei())
 				.isTrue();
 		episodio1S1.setAssistido(true);
-		assertThat(series.get(0).getTemporadas().get(0).isAssistindo())
+		assertThat(series.get(0).getTemporadaPeloIndice(0).isAssistindo())
 				.isTrue();
 		episodio3S1.setAssistido(true);
-		assertThat(series.get(0).getTemporadas().get(0).assisti()).isTrue();
+		assertThat(series.get(0).getTemporadaPeloIndice(0).assisti()).isTrue();
 		temporada1.addEpisodio(episodio2S1);
-		assertThat(series.get(0).getTemporadas().get(0).isAssistindo())
+		assertThat(series.get(0).getTemporadaPeloIndice(0).isAssistindo())
 				.isTrue();
 	}
 
@@ -175,6 +177,16 @@ public class TestesComBD {
 		temporada1.addEpisodio(episodio3S1);
 		series = bd.findAllByClass(Serie.class);
 		assertThat(series.get(0).getProximoEpisodio().getNome() == "Honor Thy Father").isTrue();
+		
+		episodio2S1.setAssistido(true);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Lone Gunmen")
+				.isTrue();
+		
+		episodio3S1.setAssistido(true);
+		series = bd.findAllByClass(Serie.class);
+		assertThat(series.get(0).getProximoEpisodio().getNome() == "Último episódio assistido")
+				.isTrue();
 
 	}
 

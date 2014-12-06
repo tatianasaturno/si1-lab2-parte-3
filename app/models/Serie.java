@@ -84,6 +84,8 @@ public class Serie implements Comparable<Serie> {
 	}
 
 	public Episodio getProximoEpisodio() {
+		//Vale ressaltar que esse método segue a premissa de que
+		//o usuário assista episódios na sequência correta (1, 2, 3, ..., n)
 		Episodio epProximo = new Episodio("Nenhum episódio assistido", 0);;
 			if(this.getTemporadasTotal() > 0){ //checando se a temporada tem mais de
 				for(Temporada t: this.getTemporadas()){
@@ -92,7 +94,7 @@ public class Serie implements Comparable<Serie> {
 							epProximo = t.getEpisodioPeloIndice(t.getTotalDeEpisodiosAssistidos());
 						}
 						else if(t.assisti()){
-							epProximo = new Episodio("último episódio assistido", 0);
+							epProximo = new Episodio("Último episódio assistido", 0);
 						}else{
 							epProximo = t.getEpisodioPeloIndice(0);
 						}
@@ -102,6 +104,10 @@ public class Serie implements Comparable<Serie> {
 			}
 		
 		return epProximo;
+	}
+	
+	public Temporada getTemporadaPeloIndice(int i){
+		return temporadas.get(i);
 	}
 
 	@Override
